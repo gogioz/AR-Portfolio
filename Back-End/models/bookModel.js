@@ -5,7 +5,7 @@ const articleSchema = mongoose.Schema({
   title: { type: String, required: true },
   discription: { type: String, required: true },
   publishDate: { type: String, required: true },
-  images: [String],
+  // images: [String],
 });
 
 // make a model from the Schema

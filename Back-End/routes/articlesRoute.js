@@ -1,48 +1,52 @@
 import express from "express";
 import { Article } from "../models/bookModel.js";
 import { Admin } from "../models/loginModel.js";
-import multer from "multer";
+// import multer from "multer";
 
 const router = express.Router();
 
 // Set up Multer
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "imgs/");
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + "-" + file.originalname);
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "imgs/");
+//   },
+//   filename: function (req, file, cb) {
+//     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+//     cb(null, uniqueSuffix + "-" + file.originalname);
+//   },
+// });
 
-const upload = multer({ storage: storage });
+// const upload = multer({ storage: storage });
 
-const uploadImages = upload.array("images", 20);
+// const uploadImages = upload.array("images", 20);
 
 // post new Article
-router.post("/articles", uploadImages, async (req, res) => {
-  try {
-    const { title, discription, publishDate } = req.body;
-    const imageNames = req.files.map((image) => image.filename);
-    const newArticle = {
-      title: title,
-      discription: discription,
-      publishDate: publishDate,
-      images: imageNames,
-    };
+router.post(
+  "/articles",
+  //  uploadImages,
+  async (req, res) => {
+    try {
+      const { title, discription, publishDate } = req.body;
+      // const imageNames = req.files.map((image) => image.filename);
+      const newArticle = {
+        title: title,
+        discription: discription,
+        publishDate: publishDate,
+        // images: imageNames,
+      };
 
-    // create the new book
-    const article = await Article.create(newArticle);
+      // create the new book
+      const article = await Article.create(newArticle);
 
-    // if success send the book
-    return res.status(201).send(article);
-    // if not handle the error
-  } catch (err) {
-    console.log(err.message);
-    res.status(500).send({ message: err.message });
+      // if success send the book
+      return res.status(201).send(article);
+      // if not handle the error
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).send({ message: err.message });
+    }
   }
-});
+);
 
 // get all books in database
 router.get("/articles", async (req, res) => {
@@ -76,8 +80,8 @@ router.put("/articles/:id", async (req, res) => {
     if (
       !req.body.title ||
       !req.body.discription ||
-      !req.body.publishDate ||
-      !req.body.images
+      !req.body.publishDate
+      // ||  !req.body.images
     ) {
       return res.status(400).send({
         message:
